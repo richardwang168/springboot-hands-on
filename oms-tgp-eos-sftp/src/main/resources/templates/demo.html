@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+    <link th:rel="stylesheet" th:href="@{webjars/font-awesome/5.15.1/css/all.css} " />
+    <script th:src="@{js/echarts.min.js}"></script>
+    <script th:src="@{js/jquery-3.6.0.min.js}"></script>
+    <script th:src="@{js/common.js}"></script>
+    <title>Sales Chat</title>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">>FCL IIB Event Reporting System</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a class="nav-link" href="#">Home
+                            <span class="sr-only">(current)</span>
+                        </a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contact</a>
+                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                    <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+                    	<input type="submit" value="Logout" />
+                    </form>
+                    	<a class="nav-link" href="" id="logoutLink">Logout</a>               	
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Sales Report</h1>
+
+        <!-- Prepare a box for eCharts DOM -->
+        <div id="main" style="width: 600px;
+						height: 400px;
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						margin-top: -200px;
+						margin-left: -300px;">
+        </div>
+    </div>
+    <!--Footer Content Start-->
+    <footer>
+        <div class="text-center">Copyright @2021 All rights reserved</div>
+    </footer>
+    <!--Footer Content End-->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //echarts initialization
+            var myChart = echarts.init(document.getElementById("main"));
+            myChart.setOption({
+                //Add Title
+                title: { text: 'Data from JSON File' },
+                // 
+                tootip: {},
+                //Example
+                legend: {
+                    data: ['Sales']
+                },
+                //x Axis
+                xAxis: {
+                    data: []
+                },
+                //y Axis
+                yAxis: {},
+                // Char attributes
+                series: [
+                    {
+                        name: 'Sales',
+                        type: 'line',// Line chat
+                        color: ['#C0FF3E'],// Color
+                        data: []// Value
+                    }
+                ]
+            });
+            //Use jQuery $.get() to get data.json file，use done function;
+            //the data in function 'done(function(data))' is the data returned from 'js/data.json'
+            $.get('js/data.json').done(function (data) {
+                myChart.setOption({
+                    xAxis: {
+                        data: data.category
+                    },
+                    series: {
+                        name: 'Sales',
+                        data: data.data
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
